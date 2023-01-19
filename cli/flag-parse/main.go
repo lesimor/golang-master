@@ -10,17 +10,7 @@ import (
 )
 
 type config struct {
-	numTimes   int
-	printUsage bool
-}
-
-var usageString = fmt.Sprintf(`Usage: %s <integer> [-h|--help]
-
-A greeter application which prints the name you entered <integer> number of times
-`, os.Args[0])
-
-func printUsage(w io.Writer) {
-	fmt.Fprintf(w, usageString)
+	numTimes int
 }
 
 func validateArgs(c config) error {
@@ -63,16 +53,12 @@ func parseArgs(w io.Writer, args []string) (config, error) {
 	}
 
 	if fs.NArg() != 0 {
-		return c, errors.New("Positional arguments specified")
+		return c, errors.New("positional arguments specified")
 	}
 	return c, nil
 }
 
 func runCmd(r io.Reader, w io.Writer, c config) error {
-	if c.printUsage {
-		printUsage(w)
-		return nil
-	}
 
 	name, err := getName(r, w)
 	if err != nil {

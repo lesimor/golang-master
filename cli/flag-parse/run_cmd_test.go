@@ -14,11 +14,7 @@ func TestRunCmd(t *testing.T) {
 		err    bool
 	}{
 		{
-			c:      config{printUsage: true},
-			output: usageString,
-		},
-		{
-			c:      config{numTimes: 10},
+			c:      config{numTimes: 5},
 			input:  "",
 			output: "Your name please? Press the Enter key when done.\n",
 			err:    true,

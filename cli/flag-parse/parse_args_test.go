@@ -49,5 +49,6 @@ func TestParseArgs(t *testing.T) {
 		if c.numTimes != tc.numTimes {
 			t.Errorf("Expected numTimes to be: %v, got: %v\n", tc.numTimes, c.numTimes)
 		}
+		bytesBuf.Reset()
 	}
 }
