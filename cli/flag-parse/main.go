@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 )
 
 type config struct {
@@ -50,27 +50,21 @@ func getName(r io.Reader, w io.Writer) (string, error) {
 
 }
 
-func parseArgs(args []string) (config, error) {
-	var numTimes int
-	var err error
+func parseArgs(w io.Writer, args []string) (config, error) {
 	c := config{}
 
-	if len(args) != 1 {
-		return c, errors.New("invalid number of arguments")
-	}
+	fs := flag.NewFlagSet("greeter", flag.ContinueOnError)
+	fs.SetOutput(w)
+	fs.IntVar(&c.numTimes, "n", 0, "Number of times to greet")
+	err := fs.Parse(args)
 
-	if args[0] == "-h" || args[0] == "--help" {
-		c.printUsage = true
-		return c, nil
-	}
-
-	numTimes, err = strconv.Atoi(args[0])
 	if err != nil {
 		return c, err
 	}
 
-	c.numTimes = numTimes
-
+	if fs.NArg() != 0 {
+		return c, errors.New("Positional arguments specified")
+	}
 	return c, nil
 }
 
@@ -96,10 +90,9 @@ func greetUser(c config, name string, w io.Writer) {
 }
 
 func main() {
-	c, err := parseArgs(os.Args[1:])
+	c, err := parseArgs(os.Stderr, os.Args[1:])
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err)
-		printUsage(os.Stdout)
 		os.Exit(1)
 	}
 

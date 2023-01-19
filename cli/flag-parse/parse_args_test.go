@@ -1,42 +1,43 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"testing"
 )
 
 type testConfig struct {
-	args []string
-	err  bool
-	config
+	args     []string
+	err      bool
+	numTimes int
 }
 
 func TestParseArgs(t *testing.T) {
 	tests := []testConfig{
 		{
-			args:   []string{"-h"},
-			err:    false,
-			config: config{printUsage: true, numTimes: 0},
+			args:     []string{"-h"},
+			err:      true,
+			numTimes: 0,
 		},
 		{
-			args:   []string{"10"},
-			err:    false,
-			config: config{printUsage: false, numTimes: 10},
+			args:     []string{"-n", "10"},
+			err:      false,
+			numTimes: 10,
 		},
 		{
-			args:   []string{"abc"},
-			err:    true,
-			config: config{printUsage: false, numTimes: 0},
+			args:     []string{"abc"},
+			err:      true,
+			numTimes: 0,
 		},
 		{
-			args:   []string{"1", "foo"},
-			err:    true,
-			config: config{printUsage: false, numTimes: 0},
+			args:     []string{"1", "foo"},
+			err:      true,
+			numTimes: 0,
 		},
 	}
-
+	bytesBuf := new(bytes.Buffer)
 	for _, tc := range tests {
-		c, err := parseArgs(tc.args)
+		c, err := parseArgs(bytesBuf, tc.args)
 		if tc.err == false && err != nil {
 			t.Errorf("Expected nil error, got: %v\n", err)
 		}

@@ -3,7 +3,7 @@
 ### how to build
 
 ```
-go mod init github.com/lesimor/manual-parse
+go mod init github.com/lesimor/cli/flag-parse
 go build -o application
 ```
 
